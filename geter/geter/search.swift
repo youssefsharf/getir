@@ -2,7 +2,8 @@ import SwiftUI
 
 struct SearchView: View {
     @State private var searchText: String = "" // حالة نص البحث
-
+    @State private var selectedTab: Int = 1
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
@@ -61,44 +62,11 @@ struct SearchView: View {
                 Spacer()
                 
                 // الأيقونات أسفل الشاشة
-                ZStack {
-                    Rectangle()
-                        .fill(Color("c"))
-                        .frame(height: 100)
-                    
-                    HStack {
-                        Spacer()
-                        // أيقونة البحث (لا تفعل شيئًا سوى البقاء في الصفحة)
-                        Button(action: {
-                            // لا يوجد إجراء هنا
-                        }) {
-                            NavigationLink(destination: SearchView().navigationBarBackButtonHidden(true)) {
-                                Image(systemName: "magnifyingglass")
-                                    .resizable()
-                                    .frame(width: 30, height: 30)
-                                    .foregroundColor(Color("my"))
-                            }}
-                        Spacer()
-                        // أيقونة المنزل
-                        NavigationLink(destination: HomeView().navigationBarBackButtonHidden(true)) {
-                            Image(systemName: "house.fill")
-                                .resizable()
-                                .frame(width: 30, height: 30)
-                                .foregroundColor(Color("my"))
-                        }
-                        Spacer()
-                        // أيقونة الملف الشخصي
-                        NavigationLink(destination: ContentView().navigationBarBackButtonHidden(true)) {
-                            Image(systemName: "person.fill")
-                                .resizable()
-                                .frame(width: 30, height: 30)
-                                .foregroundColor(Color("my"))
-                        }
-                        Spacer()
-                    }
-                }
+     
+                
+                
             }
-            .ignoresSafeArea(.container, edges: .bottom) // تجاهل منطقة الأمان للجزء السفلي
+            .ignoresSafeArea(.container, edges: .bottom)
         }
     }
 }

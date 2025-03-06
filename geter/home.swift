@@ -1,342 +1,98 @@
 import SwiftUI
 
 struct HomeView: View {
+    @State private var categories: [Datum] = []
+    @State private var isLoading = false
+    @State private var errorMessage: String?
     @State private var searchText: String = "" // حالة نص البحث
-
+    @State private var selectedTab: Int = 2
+    let columns: [GridItem] = [
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+        GridItem(.flexible()),
+    ]
+    
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
-                // العنوان الرئيسي
-                Text("getir")
-                    .bold()
-                                      .font(.system(size: 30)) // زيادة حجم الخط هنا
-                                      .frame(maxWidth: .infinity)
-                                      .padding()
-                                      .background(Color("my"))
-                                      .foregroundColor(.yellow)
-                
-                ZStack {
-                    Rectangle()
-                        .fill(Color.white) // لون خلفية شريط البحث
-                        .frame(height: 50)
-                    
-                    HStack {
-                        // أيقونة البحث
-                        Button(action: {
-                            // إجراء البحث هنا
-                        }) {
-                            Image(systemName: "location") // أيقونة الموقع
-                                .resizable()
-                                .frame(width: 25, height: 25)
-                                .foregroundColor(Color("my"))
+        VStack(spacing: 0) {
+            // العنوان الرئيسي
+            Text("getir")
+                .bold()
+                .font(.system(size: 30))
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color("my"))
+                .foregroundColor(.yellow)
+            
+            if isLoading {
+                ProgressView()
+                    .padding()
+            } else if let errorMessage = errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .padding()
+            } else {
+                ScrollView {
+                    LazyVGrid(columns: columns, spacing: 16) {
+                        ForEach(categories, id: \._id) { category in
+                            NavigationLink(destination: ProductsView()) {
+                                VStack(spacing: 8) {
+                                    ZStack {
+                                        Rectangle()
+                                            .fill(Color("c"))
+                                            .frame(width: 100, height: 100)
+                                            .cornerRadius(15)
+                                        Image(systemName: "magnifyingglass")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(Color("my"))
+                                    }
+                                    Text(category.name)
+                                        .font(.caption)
+                                        .bold()
+                                        .foregroundColor(.primary)
+                                        .multilineTextAlignment(.center)
+                                        .lineLimit(2)
+                                        .fixedSize(horizontal: false, vertical: true) // يمنع النص من تغيير حجم المربع
+                                        .frame(width: 100, height: 40) // تحديد حجم ثابت للنص
+                                }
+                                .frame(width: 100, height: 150) // تحديد حجم ثابت للمربع
+                            }
                         }
-                        // حقل النص
-                        Text("No Adress Information")
-                            .bold()
-                                              .font(.system(size: 15)) // زيادة حجم الخط هنا
-                                              
-                                             
-                                              .foregroundColor(.black)
-                            // أيقونة "X" لحذف المحتويات
-                        // Spacer لدفع أيقونة "X" إلى أقصى اليمين
-                        Spacer()
-                        
-                        Text("Add adress")
-                            .bold()
-                                              .font(.system(size: 15)) // زيادة حجم الخط هنا
-                                              
-                                             
-                                              .foregroundColor(.black)
-                            // أيقونة "X" لحذف المحتويات
-                        Button(action: {
-                            searchText = "" // حذف النص
-                        }) {
-                            Image(systemName: "plus.circle") // أيقونة الإضافة الدائرية غير المملوءة
-                                   .resizable()
-                                   .frame(width: 20, height: 20)
-                                   .foregroundColor(Color("my"))
-                           }
                     }
-                    .padding(.horizontal) // إضافة بعض الـ Padding الأفقي
+                    .padding()
                 }
-                VStack(spacing:20){
-                    Rectangle()
-                        .fill(Color("m"))
-                        .frame(height: 15)
-                    
-                    HStack(spacing: 10){
-                        
-                        
-                        VStack(){
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Beverges")
-                                .bold()
-                            
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Baked Goods")
-                                .bold()
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Ready TO Eat")
-                                .bold()
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Home Care")
-                                .bold()
-                        }
-                        VStack(){
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Snaks")
-                                .bold()
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Ice Craem")
-                                .bold()
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Meat , poult")
-                                .bold()
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Home & Living")
-                                .bold()
-                        }
-                        VStack(){
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Fruits & Vegeeies")
-                                .bold()
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Food")
-                                .bold()
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Fit & Form")
-                                .bold()
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Pet Food")
-                                .bold()
-                        }
-                        VStack(){
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Milk & Dairy")
-                                .bold()
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Breakfast")
-                                .bold()
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Personal Care")
-                                .bold()
-                            ZStack{
-                                Rectangle()
-                                    .fill(Color("c") )
-                                    .frame(width: 90, height: 90)
-                                .cornerRadius(15)
-                                NavigationLink(destination: ProductsView()) {
-                                    Image(systemName: "magnifyingglass") // أيقونة البحث
-                                        .resizable()
-                                        .frame(width: 30, height: 30)
-                                        .foregroundColor(Color("my"))
-                                }
-                            }
-                            Text("Baby Care")
-                                .bold()
-                        }}}
-                // Spacer لدفع المحتوى العلوي إلى الأعلى
-                Spacer()
-               
-                ZStack {
-                    Rectangle()
-                        .fill(Color("c") )
-                        .frame(height:100)
-                    // .ignoresSafeArea() // تجاهل منطقة الأمان (Notch)
-                    
-                    // الأيقونات أسفل الشاشة
-                    HStack {
-                        Spacer()
-                        NavigationLink(destination: SearchView().navigationBarBackButtonHidden(true)) {
-                            Image(systemName: "magnifyingglass") // أيقونة البحث
-                                .resizable()
-                                .frame(width: 30, height: 30)
-                                .foregroundColor(Color("my"))
-                        }
-                        Spacer()
-                        NavigationLink(destination: HomeView().navigationBarBackButtonHidden(true)) {
-                            Image(systemName: "house.fill") // أيقونة المنزل
-                                .resizable()
-                                .frame(width: 30, height: 30)
-                                .foregroundColor(Color("my"))
-                        }
-                        Spacer()
-                        NavigationLink(destination: ContentView().navigationBarBackButtonHidden(true)) {
-                            Image(systemName: "person.fill") // أيقونة الملف الشخصي
-                                .resizable()
-                                .frame(width: 30, height: 30)
-                                .foregroundColor(Color("my"))
-                        }
-                        Spacer()
-                    }}
-                // لون خلفية الأيقونات (اختياري)
             }
-            .ignoresSafeArea(.container, edges: .bottom) // تجاهل منطقة الأمان للجزء السفلي
+            
+            Spacer() // هذا Spacer يدفع المحتوى للأعلى ويترك المساحة لشريط التنقل السفلي
+            
+            // Bottom Navigation Bar
+            ZStack {
+        
+                
+                Rectangle()
+                    .fill(Color("m"))
+                    .frame(height: 100)
+                
+                //.padding(.horizontal)
+            }
+            .frame(height: 10)// تحديد حجم شريط التنقل السفلي
+            .ignoresSafeArea(.container, edges: .bottom)
+        }
+        .onAppear {
+            loadCategories()
+        }
+    }
+    
+    private func loadCategories() {
+        isLoading = true
+        NetworkService.shared.fetchCategories { result in
+            isLoading = false
+            switch result {
+            case .success(let category):
+                self.categories = category.data
+            case .failure(let error):
+                self.errorMessage = error.localizedDescription
+            }
         }
     }
 }
@@ -346,4 +102,3 @@ struct HomeView_Previews: PreviewProvider {
         HomeView()
     }
 }
-

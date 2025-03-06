@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct ProductsView: View {
+    @State private var searchText: String = "" // حالة نص البحث
+    @State private var selectedTab: Int = 1
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
@@ -60,8 +62,8 @@ struct ProductsView: View {
                         
                         Spacer()
                     }
-                    
-                    //.padding(.horizontal, 10) // إضافة تباعد أفقي لتجنب الالتصاف بالحواف
+                   
+                  // إضافة تباعد أفق Spacer()ي لتجنب الالتصاف بالحواف
                 }
                 ZStack {
                     Rectangle()
@@ -72,46 +74,58 @@ struct ProductsView: View {
                         Spacer()
                         
                         NavigationLink(destination: LoginView()) {
-                            Text("Beverages")
+                            Text("May Interest You")
                                 .bold()
+                                
                                 .font(.system(size: 15))
-                                .foregroundColor(Color("my"))
+                                .foregroundColor(.purple)
                         }
                         
                         NavigationLink(destination: LoginView()) {
-                            Text("Snacks")
+                            Text("BRO")
                                 .bold()
                                 .font(.system(size: 15))
-                                .foregroundColor(Color("my"))
+                                .foregroundColor(.purple)
                         }
                         
                         NavigationLink(destination: LoginView()) {
                             Text("Fruits & Veggies")
                                 .bold()
                                 .font(.system(size: 15))
-                                .foregroundColor(Color("my"))
+                                .foregroundColor(.purple)
                         }
                         
                         NavigationLink(destination: LoginView()) {
                             Text("Milk & Dairy")
                                 .bold()
                                 .font(.system(size: 15))
-                                .foregroundColor(Color("my"))
+                                .foregroundColor(.purple)
                         }
                         
                         
                         Spacer()
                     }
-                    
-                    //.padding(.horizontal, 10) // إضافة تباعد أفقي لتجنب الالتصاف بالحواف
+                   
+                  // إضافة تباعد أفق Spacer()ي لتجنب الالتصاف بالحواف
                 }
-                Spacer() // لدفع المحتوى للأعلى
-            }
-            //.navigationTitle("Products") // إضافة عنوان للشاشة
-        }
-    }
-}
-
+                Rectangle()
+                    .fill(Color("m"))
+                    .frame(height: 20)
+                Spacer()
+                
+                               
+                           }
+                           .ignoresSafeArea(.container, edges: .bottom)
+                       }
+                   }
+                   
+                   // حساب موضع السلايدر بناءً على الأيقونة المحددة
+    // حساب موضع السلايدر بناءً على الأيقونة المحددة
+      private func calculateOffset(geometry: GeometryProxy) -> CGFloat {
+          let tabWidth = geometry.size.width / 3
+          return CGFloat(selectedTab - 1) * tabWidth + (tabWidth / 2 - 15)
+      }
+  }
 struct ProductsView_Previews: PreviewProvider {
     static var previews: some View {
         ProductsView()
