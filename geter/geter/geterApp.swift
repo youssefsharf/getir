@@ -8,10 +8,12 @@
 import SwiftUI
 
 @main
-struct geterApp: App {
+struct MyApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            NavigationStack {
+                ContentView() // الصفحة الرئيسية
+            }
         }
     }
 }

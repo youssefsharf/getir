@@ -17,10 +17,10 @@ struct HomeView: View {
             // العنوان الرئيسي
             Text("getir")
                 .bold()
-                .font(.system(size: 30))
+                .font(.system(size: 20))
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color("my"))
+                .background(Color("purple1"))
                 .foregroundColor(.yellow)
             
             if isLoading {
@@ -41,10 +41,33 @@ struct HomeView: View {
                                             .fill(Color("c"))
                                             .frame(width: 100, height: 100)
                                             .cornerRadius(15)
-                                        Image(systemName: "magnifyingglass")
-                                            .resizable()
-                                            .frame(width: 30, height: 30)
-                                            .foregroundColor(Color("my"))
+                                        if let imageURL = URL(string: category.image ?? "") {
+                                            AsyncImage(url: imageURL) { phase in
+                                                switch phase {
+                                                case .empty:
+                                                    ProgressView()
+                                                case .success(let image):
+                                                    image
+                                                        .resizable()
+                                                        .scaledToFit()
+                                                        .frame(width: 100, height: 100)
+                                                        .cornerRadius(15)
+                                                case .failure:
+                                                    Image(systemName: "xmark.circle")
+                                                        .resizable()
+                                                        .frame(width: 30, height: 30)
+                                                        .foregroundColor(.red)
+                                                @unknown default:
+                                                    EmptyView()
+                                                }
+                                            }
+                                        } else {
+                                            // Fallback image if the URL is invalid or nil
+                                            Image(systemName: "xmark.circle")
+                                                .resizable()
+                                                .frame(width: 30, height: 30)
+                                                .foregroundColor(.red)
+                                        }
                                     }
                                     Text(category.name)
                                         .font(.caption)
@@ -61,23 +84,17 @@ struct HomeView: View {
                     }
                     .padding()
                 }
+                
             }
             
-            Spacer() // هذا Spacer يدفع المحتوى للأعلى ويترك المساحة لشريط التنقل السفلي
-            
-            // Bottom Navigation Bar
-            ZStack {
-        
-                
-                Rectangle()
-                    .fill(Color("m"))
-                    .frame(height: 100)
-                
-                //.padding(.horizontal)
-            }
-            .frame(height: 10)// تحديد حجم شريط التنقل السفلي
-            .ignoresSafeArea(.container, edges: .bottom)
+            Spacer()
+          
+            Rectangle()
+                .fill(Color.gray.opacity(0.2))
+                .frame(maxWidth: .infinity, maxHeight: 100)
         }
+        .ignoresSafeArea(.container, edges: .bottom)
+    
         .onAppear {
             loadCategories()
         }

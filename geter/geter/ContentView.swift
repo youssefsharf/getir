@@ -4,22 +4,15 @@ struct ContentView: View {
     @State private var selectedTab: Int = 2 // تحديد علامة التبويب الافتراضية
     
     var body: some View {
-        ZStack() {
-            // الخلفية الملونة (Rectangle)
-            Rectangle()
-                .fill(Color.gray.opacity(0.2)) // لون الخلفية
-                .frame(height: 100) // ارتفاع الخلفية
-                .ignoresSafeArea(edges: .bottom) // تجاهل الحواف الآمنة للشاشة
-            
-            // علامات التبويب والشريط المتحرك داخل الـ Rectangle
+        ZStack(alignment: .bottom) {
+            // TabView هو العنصر الرئيسي
             VStack(spacing: 0) {
-                // TabView
                 TabView(selection: $selectedTab) {
                     // علامة التبويب الأولى: البحث
                     SearchView()
                         .tabItem {
                             Image(systemName: "magnifyingglass")
-// نص اختياري
+                            Text("Search") // نص اختياري
                         }
                         .tag(0)
                     
@@ -27,19 +20,20 @@ struct ContentView: View {
                     HomeView()
                         .tabItem {
                             Image(systemName: "house.fill")
-                           // نص اختياري
+                            Text("Home") // نص اختياري
                         }
                         .tag(1)
                     
                     // علامة التبويب الثالثة: الملف الشخصي
-                    ProfileView()
+                    ProfileView(selectedTab: $selectedTab)
                         .tabItem {
                             Image(systemName: "person.fill")
-                           // نص اختياري
+                            Text("Profile") // نص اختياري
                         }
                         .tag(2)
                 }
-                .accentColor(.purple)
+                .id(selectedTab) // تثبيت حالة TabView
+                .accentColor(Color("purple1"))
                 
                 // الخط المتحرك تحت الأيقونات
                 GeometryReader { geometry in
@@ -50,17 +44,21 @@ struct ContentView: View {
                         
                         // الخط المتحرك
                         Rectangle()
-                            .fill(Color.purple)
+                            .fill(Color("purple1"))
                             .frame(width: 50, height: 2) // عرض الخط 50 نقطة
                             .offset(x: calculateSliderOffset(geometry: geometry))
                             .animation(.easeInOut, value: selectedTab)
                     }
                     .frame(maxWidth: .infinity, maxHeight: 2)
                 }
-                .frame(height: 2) // ارتفاع الشريط
+                .frame(height: 20) // ارتفاع الشريط
             }
-       // خلفية VStack لتتناسب مع الـ Rectangle
+            
+            // المستطيل الرمادي في الجزء السفلي
+            // ارتفاع 100 نقطة
+            // تأكد من أنه خلف العناصر الأخرى
         }
+        .ignoresSafeArea() // تجاهل منطقة الأمان
     }
     
     // حساب موضع الخط المتحرك بناءً على علامة التبويب المحددة

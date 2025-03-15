@@ -10,9 +10,10 @@ struct SearchView: View {
                 // العنوان الرئيسي
                 Text("Search")
                     .bold()
+                    .font(.system(size: 20))
                     .frame(maxWidth: .infinity)
                     .padding()
-                    .background(Color("my"))
+                    .background(Color("purple1"))
                     .foregroundColor(.white)
                 
                 // شريط البحث
@@ -29,7 +30,7 @@ struct SearchView: View {
                             Image(systemName: "magnifyingglass")
                                 .resizable()
                                 .frame(width: 25, height: 25)
-                                .foregroundColor(Color("my"))
+                                .foregroundColor(Color("purple1"))
                         }
                         
                         // حقل النص
@@ -60,11 +61,10 @@ struct SearchView: View {
                 
                 // Spacer لدفع المحتوى العلوي إلى الأعلى
                 Spacer()
-                
-                // الأيقونات أسفل الشاشة
-     
-                
-                
+              
+                Rectangle()
+                    .fill(Color.gray.opacity(0.2))
+                    .frame(maxWidth: .infinity, maxHeight: 100)
             }
             .ignoresSafeArea(.container, edges: .bottom)
         }
