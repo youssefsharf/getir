@@ -34,57 +34,54 @@ struct HomeView: View {
                 ScrollView {
                     LazyVGrid(columns: columns, spacing: 16) {
                         ForEach(categories, id: \._id) { category in
-                            NavigationLink(destination: ProductsView()) {
-                                VStack(spacing: 8) {
-                                    ZStack {
-                                        Rectangle()
-                                            .fill(Color("c"))
-                                            .frame(width: 100, height: 100)
-                                            .cornerRadius(15)
-                                        if let imageURL = URL(string: category.image ?? "") {
-                                            AsyncImage(url: imageURL) { phase in
-                                                switch phase {
-                                                case .empty:
-                                                    ProgressView()
-                                                case .success(let image):
-                                                    image
-                                                        .resizable()
-                                                        .scaledToFit()
-                                                        .frame(width: 100, height: 100)
-                                                        .cornerRadius(15)
-                                                case .failure:
-                                                    Image(systemName: "xmark.circle")
-                                                        .resizable()
-                                                        .frame(width: 30, height: 30)
-                                                        .foregroundColor(.red)
-                                                @unknown default:
-                                                    EmptyView()
-                                                }
+                            VStack(spacing: 8) {
+                                ZStack {
+                                    Rectangle()
+                                        .fill(Color("c"))
+                                        .frame(width: 100, height: 100)
+                                        .cornerRadius(15)
+                                    if let imageURL = URL(string: category.image ?? "") {
+                                        AsyncImage(url: imageURL) { phase in
+                                            switch phase {
+                                            case .empty:
+                                                ProgressView()
+                                            case .success(let image):
+                                                image
+                                                    .resizable()
+                                                    .scaledToFit()
+                                                    .frame(width: 100, height: 100)
+                                                    .cornerRadius(15)
+                                            case .failure:
+                                                Image(systemName: "xmark.circle")
+                                                    .resizable()
+                                                    .frame(width: 30, height: 30)
+                                                    .foregroundColor(.red)
+                                            @unknown default:
+                                                EmptyView()
                                             }
-                                        } else {
-                                            // Fallback image if the URL is invalid or nil
-                                            Image(systemName: "xmark.circle")
-                                                .resizable()
-                                                .frame(width: 30, height: 30)
-                                                .foregroundColor(.red)
                                         }
+                                    } else {
+                                        // Fallback image if the URL is invalid or nil
+                                        Image(systemName: "xmark.circle")
+                                            .resizable()
+                                            .frame(width: 30, height: 30)
+                                            .foregroundColor(.red)
                                     }
-                                    Text(category.name)
-                                        .font(.caption)
-                                        .bold()
-                                        .foregroundColor(.primary)
-                                        .multilineTextAlignment(.center)
-                                        .lineLimit(2)
-                                        .fixedSize(horizontal: false, vertical: true) // يمنع النص من تغيير حجم المربع
-                                        .frame(width: 100, height: 40) // تحديد حجم ثابت للنص
                                 }
-                                .frame(width: 100, height: 150) // تحديد حجم ثابت للمربع
+                                Text(category.name)
+                                    .font(.caption)
+                                    .bold()
+                                    .foregroundColor(.primary)
+                                    .multilineTextAlignment(.center)
+                                    .lineLimit(2)
+                                    .fixedSize(horizontal: false, vertical: true) // يمنع النص من تغيير حجم المربع
+                                    .frame(width: 100, height: 40) // تحديد حجم ثابت للنص
                             }
+                            .frame(width: 100, height: 150) // تحديد حجم ثابت للمربع
                         }
                     }
                     .padding()
                 }
-                
             }
             
             Spacer()
