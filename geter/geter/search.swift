@@ -1,13 +1,12 @@
 import SwiftUI
 
 struct SearchView: View {
-    @State private var searchText: String = "" // حالة نص البحث
+    @State private var searchText: String = ""
     @State private var selectedTab: Int = 1
     
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // العنوان الرئيسي
                 Text("Search")
                     .bold()
                     .font(.system(size: 20))
@@ -16,35 +15,28 @@ struct SearchView: View {
                     .background(Color("purple1"))
                     .foregroundColor(.white)
                 
-                // شريط البحث
                 ZStack {
                     Rectangle()
-                        .fill(Color.white) // لون خلفية شريط البحث
+                        .fill(Color.white)
                         .frame(height: 50)
                     
                     HStack {
-                        // أيقونة البحث (لا تفعل شيئًا سوى البقاء في الصفحة)
-                        Button(action: {
-                            // لا يوجد إجراء هنا
-                        }) {
+                        Button(action: {}) {
                             Image(systemName: "magnifyingglass")
                                 .resizable()
                                 .frame(width: 25, height: 25)
                                 .foregroundColor(Color("purple1"))
                         }
                         
-                        // حقل النص
                         TextField("Search...", text: $searchText)
                             .padding(10)
                             .background(Color(.white))
                             .cornerRadius(8)
                         
-                        // Spacer لدفع أيقونة "X" إلى أقصى اليمين
                         Spacer()
                         
-                        // أيقونة "X" لحذف المحتويات
                         Button(action: {
-                            searchText = "" // حذف النص
+                            searchText = ""
                         }) {
                             Image(systemName: "xmark.circle.fill")
                                 .resizable()
@@ -52,14 +44,13 @@ struct SearchView: View {
                                 .foregroundColor(.gray)
                         }
                     }
-                    .padding(.horizontal) // إضافة بعض الـ Padding الأفقي
+                    .padding(.horizontal)
                 }
                 
                 Rectangle()
                     .fill(Color("m"))
                     .frame(height: 15)
                 
-                // Spacer لدفع المحتوى العلوي إلى الأعلى
                 Spacer()
               
                 Rectangle()
