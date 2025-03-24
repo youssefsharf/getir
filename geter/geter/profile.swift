@@ -1,4 +1,12 @@
+//
+//  profile.swift
+//  geter
+//
+//  Created by MacBook Air on 3/5/25.
+//
+
 import SwiftUI
+
 
 struct ProfileView: View {
     @State private var showingBottomSheet = false
@@ -15,6 +23,7 @@ struct ProfileView: View {
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
+
                 Text("Profile")
                     .bold()
                     .font(.system(size: 20))
@@ -23,7 +32,9 @@ struct ProfileView: View {
                     .background(Color("purple1"))
                     .foregroundColor(.white)
                 
+                
                 VStack(spacing: 20) {
+                    
                     HStack {
                         Image(systemName: "person.fill")
                             .resizable()
@@ -94,14 +105,14 @@ struct ProfileView: View {
                                             .bold()
                                             .font(.system(size: 20))
                                             .foregroundColor(Color("purple1"))
-                                        Image("1")
+                                        Image("1") // قم بتغيير "1" إلى اسم الصورة الخاصة بك
                                             .resizable()
                                             .scaledToFit()
                                             .frame(height: 150)
                                             .shadow(radius: 5)
                                         
                                         HStack {
-                                            Image(systemName: "envelope")
+                                            Image(systemName: "envelope") // أيقونة الإيميل
                                                 .resizable()
                                                 .frame(width: 20, height: 20)
                                                 .foregroundColor(.gray)
@@ -120,15 +131,15 @@ struct ProfileView: View {
                                             
                                             ZStack(alignment: .trailing) {
                                                 if showPassword {
-                                                    TextField("Password", text: $password)
+                                                    TextField("Password", text: $password)//
                                                 } else {
-                                                    SecureField("Password", text: $password)
+                                                    SecureField("Password", text: $password) //
                                                 }
                                                 
                                                 Button(action: {
-                                                    showPassword.toggle()
+                                                    showPassword.toggle() // تبديل حالة إظهار/إخفاء كلمة المرور
                                                 }) {
-                                                    Image(systemName: showPassword ? "eye.slash" : "eye")
+                                                    Image(systemName: showPassword ? "eye.slash" : "eye") // تغيير الأيقونة بناءً على الحالة
                                                         .foregroundColor(.gray)
                                                         .padding(.trailing, 10)
                                                 }
@@ -140,7 +151,7 @@ struct ProfileView: View {
                                         Spacer()
                                         
                                         Button(action: {
-                                            signup(email: email, password: password)
+                                            signup(email: email, password: password) // قم بتنفيذ عملية التسجيل
                                         }) {
                                             Text("Sign Up")
                                                 .padding()
@@ -180,14 +191,14 @@ struct ProfileView: View {
                                             .font(.system(size: 20))
                                             .foregroundColor(Color("purple1"))
                                         
-                                        Image("1")
+                                        Image("1") // قم بتغيير "1" إلى اسم الصورة الخاصة بك
                                             .resizable()
                                             .scaledToFit()
                                             .frame(height: 150)
                                             .shadow(radius: 5)
                                         
                                         HStack {
-                                            Image(systemName: "envelope")
+                                            Image(systemName: "envelope") // أيقونة الإيميل
                                                 .resizable()
                                                 .frame(width: 20, height: 20)
                                                 .foregroundColor(.gray)
@@ -198,7 +209,7 @@ struct ProfileView: View {
                                         .padding()
                                         
                                         HStack {
-                                            Image(systemName: "lock")
+                                            Image(systemName: "lock") // أيقونة كلمة المرور
                                                 .resizable()
                                                 .frame(width: 20, height: 20)
                                                 .foregroundColor(.gray)
@@ -206,15 +217,15 @@ struct ProfileView: View {
                                             
                                             ZStack(alignment: .trailing) {
                                                 if showPassword {
-                                                    TextField("Password", text: $password)
+                                                    TextField("Password", text: $password) // إظهار النص العادي
                                                 } else {
-                                                    SecureField("Password", text: $password)
+                                                    SecureField("Password", text: $password) // إخفاء النص
                                                 }
                                                 
                                                 Button(action: {
-                                                    showPassword.toggle()
+                                                    showPassword.toggle() // تبديل حالة إظهار/إخفاء كلمة المرور
                                                 }) {
-                                                    Image(systemName: showPassword ? "eye.slash" : "eye")
+                                                    Image(systemName: showPassword ? "eye.slash" : "eye") // تغيير الأيقونة بناءً على الحالة
                                                         .foregroundColor(.gray)
                                                         .padding(.trailing, 10)
                                                 }
@@ -226,7 +237,7 @@ struct ProfileView: View {
                                         Spacer()
                                         
                                         Button(action: {
-                                            login(email: email, password: password)
+                                            login(email: email, password: password) // قم بتنفيذ عملية تسجيل الدخول
                                         }) {
                                             Text("Sign in")
                                                 .padding()
@@ -246,9 +257,10 @@ struct ProfileView: View {
                     }
                     
                     Rectangle()
-                        .fill(Color("offwhite"))
+                        .fill(Color("offwhite")) // لون خلفية شريط البحث
                         .frame(height: 20)
                     
+                    // قسم العناوين
                     HStack {
                         Image(systemName: "house.fill")
                             .resizable()
@@ -261,6 +273,7 @@ struct ProfileView: View {
                             .padding(.leading, 10)
                         Spacer()
                         Button(action: {
+                            // الانتقال إلى الصفحة الرئيسية
                             selectedTab = 1
                         }) {
                             Image(systemName: "chevron.right")
@@ -271,6 +284,7 @@ struct ProfileView: View {
                     
                     Divider()
                     
+                    // قسم المفضلة
                     HStack {
                         Image(systemName: "heart.fill")
                             .resizable()
@@ -283,6 +297,7 @@ struct ProfileView: View {
                             .padding(.leading, 10)
                         Spacer()
                         Button(action: {
+                            // الانتقال إلى الصفحة الرئيسية
                             selectedTab = 1
                         }) {
                             Image(systemName: "chevron.right")
@@ -293,8 +308,8 @@ struct ProfileView: View {
                     
                     ZStack{
                         Rectangle()
-                            .fill(Color("offwhite"))
-                            .frame(height: 60)
+                            .fill(Color("offwhite")) // لون خلفية شريط البحث
+                            .frame(height: 60)// قسم اللغة
                         Text("Language")
                             .bold()
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -308,6 +323,7 @@ struct ProfileView: View {
                             .padding(.leading, 18)
                         Spacer()
                         Button(action: {
+                            // الانتقال إلى الصفحة الرئيسية
                             selectedTab = 1
                         }) {
                             Image(systemName: "chevron.right")
@@ -316,9 +332,10 @@ struct ProfileView: View {
                         }
                     }
                     
+                    // قسم الإصدار
                     ZStack{
                         Rectangle()
-                            .fill(Color("offwhite"))
+                            .fill(Color("offwhite")) // لون خلفية شريط البحث
                             .frame(height: 60)
                         Text("Version")
                             .bold()
@@ -343,6 +360,7 @@ struct ProfileView: View {
             .ignoresSafeArea(.container, edges: .bottom)
         }
         .onAppear {
+            // تأكد من أن علامة التبويب المحددة هي "الملف الشخصي" (2)
             selectedTab = 2
         }
     }
@@ -373,17 +391,19 @@ struct ProfileView: View {
                     if httpResponse.statusCode == 201 {
                         if let jsonResponse = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
                            let token = jsonResponse["token"] as? String {
-                            self.token = token
+                            self.token = token // حفظ التوكن في @AppStorage
                             showMessage = "Signup successful!"
                             
+                            // إغلاق الـ sheet فورًا
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 showingBottomSheet1 = false
                                 showingBottomSheet2 = false
                                 showingBottomSheet = false
                             }
                             
+                            // الانتقال إلى الصفحة الرئيسية بعد إغلاق الـ sheet
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                selectedTab = 1
+                                selectedTab = 1 // تغيير التبويب إلى الصفحة الرئيسية
                             }
                         }
                     } else {
@@ -416,17 +436,20 @@ struct ProfileView: View {
                         if let jsonResponse = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                            let token = jsonResponse["token"] as? String {
                             
+                            // حفظ التوكن في @AppStorage
                             self.token = token
                             showMessage = "Login successful!"
                             
+                            // إغلاق الـ sheets مع تأثير animation
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 showingBottomSheet1 = false
                                 showingBottomSheet2 = false
                                 showingBottomSheet = false
                             }
                             
+                            // الانتقال إلى الصفحة الرئيسية بعد إغلاق الـ sheets
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                selectedTab = 1
+                                selectedTab = 1 // تغيير التبويب إلى الصفحة الرئيسية
                             }
                         }
                     } catch {
@@ -440,12 +463,12 @@ struct ProfileView: View {
     }
 }
 
+// MARK: - معاينة
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
 }
-
 struct UserData {
     let id: String
     let email: String

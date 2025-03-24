@@ -5,7 +5,6 @@ struct HomeView: View {
     @State private var isLoading = false
     @State private var errorMessage: String?
     @State private var searchText: String = ""
-    @State private var selectedTab: Int = 2
     let columns: [GridItem] = [
         GridItem(.flexible()),
         GridItem(.flexible()),
@@ -62,7 +61,6 @@ struct HomeView: View {
                                                     }
                                                 }
                                             } else {
-                                                // Fallback image if the URL is invalid or nil
                                                 Image(systemName: "xmark.circle")
                                                     .resizable()
                                                     .frame(width: 30, height: 30)
@@ -92,6 +90,7 @@ struct HomeView: View {
                     .fill(Color.gray.opacity(0.2))
                     .frame(maxWidth: .infinity, maxHeight: 100)
             }
+            .accentColor(.white) // هذا يجعل زر الرجوع أبيض
             .ignoresSafeArea(.container, edges: .bottom)
             .onAppear {
                 loadCategories()
