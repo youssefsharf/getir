@@ -1,13 +1,15 @@
+// products.swift
 import SwiftUI
 import Foundation
 
 struct ProductView: View {
-    
     @StateObject private var viewModel = CatViewModel()
     @StateObject private var viewModel1 = CateViewModel()
     
     @State private var selectedProduct: CatDatum? = nil
     @State private var showBottomSheet = false
+    @State private var selectedCategoryIndex: Int = 0
+    @State private var selectedChildIndex: Int = 0
     
     let columns = [
         GridItem(.flexible(), spacing: 16),
@@ -18,7 +20,7 @@ struct ProductView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                Text("product")
+                Text("Product")
                     .bold()
                     .font(.system(size: 20))
                     .frame(maxWidth: .infinity)
@@ -36,54 +38,82 @@ struct ProductView: View {
                     } else if let errorMessage = viewModel1.errorMessage {
                         Text("Error: \(errorMessage)")
                             .foregroundColor(.red)
-                    } else if let catData = viewModel1.catData, let data = catData.data {
+                    } else if let catData = viewModel1.catData {
                         ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 16) {
-                                ForEach(data, id: \.id) { category in
-                                    Text(category.name.prefix(1).capitalized + category.name.dropFirst().lowercased())
-                                        .bold()
-                                        .font(.system(size: 20))
-                                        .foregroundColor(.white)
+                            HStack(spacing: 0) {
+                                ForEach(Array(catData.data.enumerated()), id: \.element.id) { index, category in
+                                    VStack(spacing: 0) {
+                                        Text(category.name.prefix(1).capitalized + category.name.dropFirst().lowercased())
+                                            .bold()
+                                            .font(.system(size: 20))
+                                            .foregroundColor(.white)
+                                            .padding(.horizontal, 20)
+                                            .padding(.vertical, 15)
+                                            .onTapGesture {
+                                                selectedCategoryIndex = index
+                                                selectedChildIndex = 0
+                                                viewModel1.fetchChildren(for: category)
+                                                loadProductsForSelectedCategory()
+                                            }
+                                        
+                                        if selectedCategoryIndex == index {
+                                            Rectangle()
+                                                .fill(Color.yellow)
+                                                .frame(height: 3)
+                                                .padding(.horizontal, 15)
+                                                .transition(.opacity)
+                                        }
+                                    }
                                 }
                             }
-                            .padding()
                         }
                     } else {
                         Text("No data available")
                     }
                 }
+                .frame(height: 60)
                 
-                if let catData = viewModel1.catData, let data = catData.data, data.contains(where: { !$0.children.isEmpty }) {
+                if !viewModel1.selectedChildren.isEmpty {
                     ZStack {
                         Rectangle()
                             .fill(Color("purple2"))
                             .frame(height: 60)
                         
-                        if viewModel1.isLoading {
-                            ProgressView("Loading...")
-                        } else if let errorMessage = viewModel1.errorMessage {
-                            Text("Error: \(errorMessage)")
-                                .foregroundColor(.red)
-                        } else {
-                            ScrollView(.horizontal, showsIndicators: false) {
-                                HStack(spacing: 16) {
-                                    ForEach(data, id: \.id) { category in
-                                        if !category.children.isEmpty {
-                                            VStack(alignment: .leading, spacing: 8) {
-                                                ForEach(category.children, id: \.self) { child in
-                                                    Text(child.prefix(1).capitalized + child.dropFirst().lowercased())
-                                                        .font(.system(size: 16))
-                                                        .foregroundColor(.white.opacity(0.8))
+                        ScrollView(.horizontal, showsIndicators: false) {
+                            HStack(spacing: 0) {
+                                ForEach(Array(viewModel1.selectedChildren.enumerated()), id: \.element.id) { index, child in
+                                    VStack(spacing: 0) {
+                                        if let name = child.name {
+                                            Text(name.prefix(1).capitalized + name.dropFirst().lowercased())
+                                                .font(.system(size: 16))
+                                                .foregroundColor(.white.opacity(0.8))
+                                                .padding(.horizontal, 16)
+                                                .padding(.vertical, 15)
+                                                .onTapGesture {
+                                                    selectedChildIndex = index
+                                                    loadProductsForSelectedChildCategory()
                                                 }
+                                            
+                                            if selectedChildIndex == index {
+                                                Rectangle()
+                                                    .fill(Color.yellow)
+                                                    .frame(height: 3)
+                                                    .padding(.horizontal, 15)
+                                                    .transition(.opacity)
                                             }
                                         }
                                     }
                                 }
-                                .padding()
                             }
+                            .padding(.horizontal, 8)
                         }
                     }
                 }
+                
+                Rectangle()
+                    .fill(Color("offwhite"))
+                    .frame(height: 10)
+                    .padding(.bottom, 10)
                 
                 if viewModel.isLoading {
                     ProgressView("Loading...")
@@ -110,45 +140,29 @@ struct ProductView: View {
                                                             .stroke(Color.gray, lineWidth: 1)
                                                     )
                                                 
-                                                // عرض الصورة
-                                                if let imagesArray = product.imagesArray, !imagesArray.isEmpty {
-                                                    if let imageName = imagesArray[0].image {
-                                                        let baseURL = "https://api2.smartinb.ai:8001/"
-                                                        if let encodedImageName = imageName.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) {
-                                                            if let imageURL = URL(string: baseURL + encodedImageName) {
-                                                                AsyncImage(url: imageURL) { phase in
-                                                                    switch phase {
-                                                                    case .empty:
-                                                                        ProgressView()
-                                                                            .frame(width: 100, height: 100)
-                                                                    case .success(let image):
-                                                                        image
-                                                                            .resizable()
-                                                                            .scaledToFit()
-                                                                            .frame(width: 100, height: 100)
-                                                                            .cornerRadius(15)
-                                                                    case .failure:
-                                                                        Image(systemName: "photo")
-                                                                            .resizable()
-                                                                            .scaledToFit()
-                                                                            .frame(width: 100, height: 100)
-                                                                            .cornerRadius(15)
-                                                                            .foregroundColor(.gray)
-                                                                    @unknown default:
-                                                                        EmptyView()
-                                                                    }
-                                                                }
-                                                            } else {
-                                                                Text("Invalid URL")
-                                                            }
-                                                        } else {
-                                                            Text("Invalid image name")
+                                                if let imagesArray = product.imagesArray, !imagesArray.isEmpty,
+                                                   let imageUrl = imagesArray[0].image,
+                                                   let imageURL = URL(string: imageUrl) {
+                                                    
+                                                    AsyncImage(url: imageURL) { phase in
+                                                        switch phase {
+                                                        case .empty:
+                                                            ProgressView()
+                                                                .frame(width: 100, height: 100)
+                                                        case .success(let image):
+                                                            image
+                                                                .resizable()
+                                                                .scaledToFit()
+                                                                .frame(width: 100, height: 100)
+                                                                .cornerRadius(15)
+                                                        case .failure(_):
+                                                            placeholderImage()
+                                                        @unknown default:
+                                                            placeholderImage()
                                                         }
-                                                    } else {
-                                                        Text("No image available")
                                                     }
                                                 } else {
-                                                    Text("No images in array")
+                                                    placeholderImage()
                                                 }
                                             }
                                             
@@ -185,7 +199,6 @@ struct ProductView: View {
                                             .foregroundColor(.primary)
                                             .multilineTextAlignment(.center)
                                             .lineLimit(2)
-                                            .fixedSize(horizontal: false, vertical: true)
                                             .frame(width: 100, height: 40)
                                     }
                                     .frame(width: 100, height: 150)
@@ -207,7 +220,6 @@ struct ProductView: View {
             }
             .ignoresSafeArea(.container, edges: .bottom)
             .onAppear {
-                viewModel.fetchCatData()
                 viewModel1.fetchCatData()
             }
             .sheet(isPresented: $showBottomSheet) {
@@ -220,6 +232,32 @@ struct ProductView: View {
             }
         }
     }
+    
+    private func placeholderImage() -> some View {
+        Image(systemName: "photo")
+            .resizable()
+            .scaledToFit()
+            .frame(width: 50, height: 50)
+            .foregroundColor(.gray)
+            .background(Color("c"))
+            .cornerRadius(15)
+    }
+    
+    private func loadProductsForSelectedCategory() {
+        if let categoryId = viewModel1.catData?.data[selectedCategoryIndex].id {
+            viewModel.fetchCatData(categoryId: categoryId)
+        }
+    }
+    
+    private func loadProductsForSelectedChildCategory() {
+        guard selectedChildIndex < viewModel1.selectedChildren.count,
+              let categoryId = viewModel1.selectedChildren[selectedChildIndex].id else {
+            print("Invalid child category selection")
+            return
+        }
+        viewModel.fetchCatData(categoryId: categoryId)
+    }
+
 }
 
 struct ProductView_Previews: PreviewProvider {

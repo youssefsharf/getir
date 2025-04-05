@@ -1,3 +1,6 @@
+
+
+
 //
 //  profile.swift
 //  geter
@@ -18,12 +21,12 @@ struct ProfileView: View {
     @State private var showMessage: String = ""
     @State private var name: String = ""
     @AppStorage("token") var token: String = ""
-    @Binding var selectedTab: Int
+    @Binding var selectedTab: Int // Binding لتغيير التبويب
 
     var body: some View {
         NavigationStack {
             VStack(spacing: 0) {
-
+                // العنوان الرئيسي
                 Text("Profile")
                     .bold()
                     .font(.system(size: 20))
@@ -32,9 +35,9 @@ struct ProfileView: View {
                     .background(Color("purple1"))
                     .foregroundColor(.white)
                 
-                
+                // محتوى الملف الشخصي
                 VStack(spacing: 20) {
-                    
+                    // قسم تسجيل الدخول
                     HStack {
                         Image(systemName: "person.fill")
                             .resizable()
@@ -123,7 +126,7 @@ struct ProfileView: View {
                                         .padding()
                                         
                                         HStack {
-                                            Image(systemName: "lock")
+                                            Image(systemName: "lock") // أيقونة كلمة المرور
                                                 .resizable()
                                                 .frame(width: 20, height: 20)
                                                 .foregroundColor(.gray)
@@ -131,9 +134,9 @@ struct ProfileView: View {
                                             
                                             ZStack(alignment: .trailing) {
                                                 if showPassword {
-                                                    TextField("Password", text: $password)//
+                                                    TextField("Password", text: $password) // إظهار النص العادي
                                                 } else {
-                                                    SecureField("Password", text: $password) //
+                                                    SecureField("Password", text: $password) // إخفاء النص
                                                 }
                                                 
                                                 Button(action: {
