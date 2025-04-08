@@ -1,265 +1,196 @@
-import SwiftUI
 import Foundation
 
-// MARK: - نموذج البيانات
+// النموذج الرئيسي للاستجابة
 struct Cat: Codable {
-    let data: [CatDatum]
-    let results: Int
-    let status: String
+    let status: String?
+    let results: Int?
+    let pages: Int?
+    let data: [CatDatum]?
 }
 
-struct CatDatum: Codable {
-    let ecommercePriceBeforeTax: Double
-    let featured: Bool
-    let value2, suppliers: [AnyCodable]
-    let alternateProducts: [String]
-    let type: TypeEnum
-    let createdAt, shortDescriptionAR: String
-    let price: Double
-    let v: Int
-    let datumID, sku, descriptionTR: String
-    let slug: String?
-    let profitRatio: Double?
-    let height: Int
-    let updatedAt: String
-    let metas: Metas
+// نموذج بيانات المنتج
+struct CatDatum: Codable, Identifiable {
+    let metas: Metas?
+    let sync: Bool?
+    let id: String?
+    let name: String?
+    let nameAR: String?
+    let nameTR: String?
+    let type: String?
+    let shortDescription: String?
+    let shortDescriptionAR: String?
+    let shortDescriptionTR: String?
+    let description: String?
+    let descriptionAR: String?
+    let descriptionTR: String?
+    let sold: Int?
+    let quantity: Int?
+    let price: Double?
+    let ecommercePrice: Double?
+    let ecommercePriceMainCurrency: Double?
+    let ecommercePriceBeforeTax: Double?
+    let ecommercePriceAftereDiscount: Int?
+    let buyingprice: Double?
+    let priceAftereDiscount: Int?
     let qr: String?
-    let additionalInfo: AdditionalInfo
-    let weight: Double
-    let tax: Tax
-    let shortDescription: ShortDescription
-    let sync: Bool
-    let addToFavourites, priceAftereDiscount: Int
-    let unit: Unit?
-    let imagesArray: [ImagesArray]
-    let ecommercePriceMainCurrency: Double
-    let name, id: String
-    let customAttributes: [CustomAttribute]
-    let archives: String
-    let nameAR: NameAR
-    let description, descriptionAR: String
-    let buyingprice, ratingsAverage: Double
-    let stocks: [Stock]
-    let soldByWeek: Int?
-    let parasutID: String
-    let alarm, addToCart: Int
-    let currency: Currency
+    let sku: String?
+    let unit: String?
+    let alarm: Int?
+    let tax: [TaxItem]?
+    let taxPrice: Double?
+    let archives: String?
+    let currency: [Currency]?
+    let profitRatio: Double?
+    let ratingsAverage: Double?
+    let ratingsQuantity: Int?
+    let additionalInfo: String?
+    let addToCart: Int?
+    let addToFavourites: Int?
+    let stocks: [Stock]?
+    let ecommerceActive: Bool?
+    let publish: Bool?
+    let featured: Bool?
+    let sponsored: Bool?
+    let height: Int?
+    let width: Int?
+    let weight: Double?
+    let length: Int?
+    let imagesArray: [ProductImage]?
+    let customAttributes: [CustomAttribute]?
+    let v: Int?
+    let createdAt: String?
+    let updatedAt: String?
+    let parasutID: String?
     let soldByMonth: Int?
-    let shortDescriptionTR: String
-    let value: [AnyCodable]
+    let soldByWeek: Int?
     let productNo: Int?
-    let sold, quantity, ecommercePriceAftereDiscount, length: Int
-    let sponsored: Bool
-    let ratingsQuantity: Int
-    let ecommercePrice: Double
-    let nameTR: String
-    let publish: Bool
-    let width: Int
-    let taxPrice: Double
-    let ecommerceActive: Bool
-    let importDate, density: String?
-    let category: CatCategory?
-    let brand: String?
+    let slug: String?
+    let importDate: String?
+    let productCategory: ProductCategory?  // تم تغيير الاسم من Category لتجنب التعارض
+    let brand: [ProductBrand]?             // تم تغيير الاسم من Brand لتجنب التعارض
+    let density: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case metas, sync
+        case id = "_id"
+        case name, nameAR, nameTR, type, shortDescription, shortDescriptionAR, shortDescriptionTR
+        case description, descriptionAR, descriptionTR, sold, quantity, price, ecommercePrice
+        case ecommercePriceMainCurrency, ecommercePriceBeforeTax, ecommercePriceAftereDiscount
+        case buyingprice, priceAftereDiscount, qr, sku, unit, alarm, tax, taxPrice
+        case archives, currency, profitRatio, ratingsAverage, ratingsQuantity
+        case additionalInfo = "AdditionalInfo"
+        case addToCart, addToFavourites, stocks, ecommerceActive, publish, featured, sponsored
+        case height, width, weight, length, imagesArray, customAttributes
+        case v = "__v"
+        case createdAt, updatedAt, parasutID = "parasutID"
+        case soldByMonth, soldByWeek, productNo, slug, importDate
+        case productCategory = "category"  // التعيين لاسم المفتاح في JSON
+        case brand, density
+    }
 }
 
-// MARK: - تعريف الأنواع الأخرى
-enum AdditionalInfo: String, Codable {
-    case additionalInfo = "AdditionalInfo"
-}
-
-enum CatCategory: String, Codable {
-    case the67Bd7B2Ce1D73Ac9906062A1 = "67bd7b2ce1d73ac9906062a1"
-    case the67Bd7B4De1D73Ac9906062A7 = "67bd7b4de1d73ac9906062a7"
-    case the67Bd7B8Ce1D73Ac9906062C3 = "67bd7b8ce1d73ac9906062c3"
-    case the67Bd7Ba8E1D73Ac9906062CA = "67bd7ba8e1d73ac9906062ca"
-    case the67Bd7C05E1D73Ac9906062Df = "67bd7c05e1d73ac9906062df"
-    case the67Bd7C54E1D73Ac99060631B = "67bd7c54e1d73ac99060631b"
-    case the67Bd7C6Be1D73Ac990606322 = "67bd7c6be1d73ac990606322"
-    case the67Bd7C92E1D73Ac990606329 = "67bd7c92e1d73ac990606329"
-    case the67Bd7Cb1E1D73Ac990606330 = "67bd7cb1e1d73ac990606330"
-    case the67Bd7Ce4E1D73Ac990606337 = "67bd7ce4e1d73ac990606337"
-    case the67Bd7D0De1D73Ac99060633E = "67bd7d0de1d73ac99060633e"
-    case the67C6B5Bf27Bcf07Ef6Cc4140 = "67c6b5bf27bcf07ef6cc4140"
-    case the67Cacee0E9B92C6338053Fb7 = "67cacee0e9b92c6338053fb7"
-}
-
-struct Currency: Codable {
-    let currencyName: CurrencyName
-    let isPrimary: String
-    let exchangeRate: Double
-    let id: ID
-    let currencyCode: CurrencyCode
-}
-
-enum CurrencyCode: String, Codable {
-    case currencyCode = "CurrencyCode"
-    case empty = ""
-}
-
-enum CurrencyName: String, Codable {
-    case trl = "TRL"
-    case usd = "USD"
-}
-
-enum ID: String, Codable {
-    case the67Bd7864E1D73Ac990606201 = "67bd7864e1d73ac990606201"
-    case the67Bd82Fee1D73Ac990606459 = "67bd82fee1d73ac990606459"
-}
-
-struct CustomAttribute: Codable {
-    let value, key: String
-}
-
-struct ImagesArray: Codable {
-    let image: String
-    let isCover: Bool
-}
-
+// نماذج البيانات المساعدة
 struct Metas: Codable {
-    let keywords: Keywords
-    let description, title: Description
+    let title: Description?
+    let description: Description?
+    let keywords: Keywords?
 }
 
 struct Description: Codable {
-    let ar: String
-    let en: En
-    let tr: String
-}
-
-enum En: String, Codable {
-    case empty = ""
-    case lenovoLecooM1102OptikKabloluMouseFiyatları = "Lenovo Lecoo M1102 Optik Kablolu Mouse Fiyatları"
+    let en: String?
+    let ar: String?
+    let tr: String?
 }
 
 struct Keywords: Codable {
-    let ar, en, tr: [AnyCodable]
+    let en: [String]?
+    let ar: [String]?
+    let tr: [String]?
 }
 
-enum NameAR: String, Codable {
-    case empty = ""
-    case nameAR = "NameAR"
-    case zkTecoSF300قارئبصماتالأصابع = "ZK Teco SF300 قارئ بصمات الأصابع"
+struct TaxItem: Codable {
+    let id: String?
+    let tax: Int?
+    let name: String?
+    let description: String?
+    let slug: String?
+    let isDefault: Bool?
+    let v: Int?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case tax, name, description, slug
+        case isDefault = "isDefault"
+        case v = "__v"
+    }
 }
 
-enum ShortDescription: String, Codable {
-    case productShortDescription = "ProductShortDescription"
+struct Currency: Codable {
+    let id: String?
+    let currencyCode: String?
+    let currencyName: String?
+    let exchangeRate: Double?
+    let isPrimary: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case currencyCode, currencyName, exchangeRate
+        case isPrimary = "is_primary"
+    }
 }
 
 struct Stock: Codable {
-    let productQuantity: Double
-    let stockName: StockName
-    let stockID: StockID
-}
-
-enum StockID: String, Codable {
-    case the67Bd7863E1D73Ac9906061F9 = "67bd7863e1d73ac9906061f9"
-}
-
-enum StockName: String, Codable {
-    case mainStcok = "MainStcok"
-}
-
-enum Tax: String, Codable {
-    case the67Bd7E39E1D73Ac99060635F = "67bd7e39e1d73ac99060635f"
-    case the67Bd7E45E1D73Ac990606373 = "67bd7e45e1d73ac990606373"
-}
-
-enum TypeEnum: String, Codable {
-    case normal = "normal"
-}
-
-enum Unit: String, Codable {
-    case the67Bd7Ea2E1D73Ac9906063C0 = "67bd7ea2e1d73ac9906063c0"
-    case the67Bd7Ea9E1D73Ac9906063C7 = "67bd7ea9e1d73ac9906063c7"
-    case the67Bd7Eb3E1D73Ac9906063Ce = "67bd7eb3e1d73ac9906063ce"
-}
-
-// MARK: - AnyCodable للتعامل مع القيم التي قد تكون من أي نوع
-struct AnyCodable: Codable {}
-
-// MARK: - ViewModel لجلب البيانات
-class CatViewModel: ObservableObject {
-    @Published var catData: Cat?
-    @Published var isLoading = false
-    @Published var errorMessage: String?
+    let stockId: String?
+    let stockName: String?
+    let productQuantity: Double?
     
-    func fetchCatData() {
-        guard let url = URL(string: "https://api2.smartinb.ai:8001/api/product/getallproduct?databaseName=B202") else {
-            errorMessage = "Invalid URL"
-            return
-        }
-        
-        isLoading = true
-        errorMessage = nil
-        
-        let task = URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            DispatchQueue.main.async {
-                self?.isLoading = false
-                
-                if let error = error {
-                    self?.errorMessage = error.localizedDescription
-                    return
-                }
-                
-                guard let data = data else {
-                    self?.errorMessage = "No data received"
-                    return
-                }
-                
-                // طباعة البيانات الخام لفحصها
-                if let jsonString = String(data: data, encoding: .utf8) {
-                    print("Received JSON: \(jsonString)")
-                }
-                
-                do {
-                    let decoder = JSONDecoder()
-                    self?.catData = try decoder.decode(Cat.self, from: data)
-                } catch {
-                    self?.errorMessage = "Failed to decode JSON: \(error.localizedDescription)"
-                    print("Decoding error: \(error)")
-                }
-            }
-        }
-        
-        task.resume()
+    enum CodingKeys: String, CodingKey {
+        case stockId = "stockId"
+        case stockName = "stockName"
+        case productQuantity = "productQuantity"
     }
 }
 
-// MARK: - واجهة المستخدم باستخدام SwiftUI
-struct ProductView: View {
-    @StateObject private var viewModel = CatViewModel()
+struct ProductImage: Codable {
+    let image: String?
+    let isCover: Bool?
+}
+
+struct CustomAttribute: Codable {
+    let value: String?
+    let key: String?
+}
+
+struct ProductCategory: Codable {
+    let id: String?
+    let name: String?
+    let nameAR: String?
+    let nameTR: String?
+    let image: String?
+    let profitRatio: Int?
+    let ecommerceVisible: Bool?
+    let slug: String?
+    let ecommerceHomeVisible: Bool?
     
-    var body: some View {
-        NavigationView {
-            VStack {
-                if viewModel.isLoading {
-                    ProgressView("Loading...")
-                } else if let errorMessage = viewModel.errorMessage {
-                    Text("Error: \(errorMessage)")
-                        .foregroundColor(.red)
-                } else if let catData = viewModel.catData {
-                    List(catData.data, id: \.id) { catDatum in
-                        VStack(alignment: .leading) {
-                            Text(catDatum.name)
-                                .font(.headline)
-                            Text("Price: \(catDatum.price, specifier: "%.2f")")
-                                .font(.subheadline)
-                        }
-                    }
-                    .navigationTitle("Products")
-                } else {
-                    Text("No data available")
-                }
-            }
-            .onAppear {
-                viewModel.fetchCatData()
-            }
-        }
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case name, nameAR, nameTR, image, profitRatio
+        case ecommerceVisible, slug, ecommerceHomeVisible
     }
 }
 
-struct ProductView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProductView()
+struct ProductBrand: Codable {
+    let id: String?
+    let name: String?
+    let nameAR: String?
+    let nameTR: String?
+    let ecommerceVisible: Bool?
+    let slug: String?
+    let image: String?
+    
+    enum CodingKeys: String, CodingKey {
+        case id = "_id"
+        case name, nameAR, nameTR, ecommerceVisible, slug, image
     }
-} 
+}
+
